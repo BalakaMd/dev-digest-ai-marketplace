@@ -1,6 +1,6 @@
 # Workflow Retro Skill
 
-A **retrospective / post-mortem** for a multi-agent run. After a workflow finishes — `/run-plan`,
+A **retrospective / post-mortem** for a multi-agent run. After a workflow finishes — `/sdd-engineering:run-plan`,
 the spec → plan → implement chain, a `Workflow()` fan-out, or any batch of sub-agents — invoke this
 skill to find out **what it cost, where it struggled, what it wasted, and what to change next time**,
 then log a trend row so runs can be compared over time.
@@ -37,7 +37,7 @@ finished multi-agent run
 
 ## When to invoke
 
-- `/workflow-retro` (optionally `label:<slug>`, `deep`, `scope:session`)
+- `/sdd-engineering:workflow-retro` (optionally `label:<slug>`, `deep`, `scope:session`)
 - Phrases: "retro this run", "workflow retrospective", "analyze that multi-agent run",
   "how did that workflow go".
 
@@ -86,7 +86,6 @@ shows `n/a`.
 ```
 workflow-retro/
 ├── SKILL.md                     ← analyst — phases: scope → collect → analyse → recommend → report
-├── tile.json                    ← skill metadata
 ├── README.md                    ← this file
 └── scripts/
     └── analyze_journals.py      ← read-only, stdlib-only JSONL parser for `deep` mode
@@ -94,8 +93,8 @@ workflow-retro/
 
 ## Relationship to other skills
 
-- `/run-plan` **builds** a feature (implement → test → review → fix). `workflow-retro` looks **back**
+- `/sdd-engineering:run-plan` **builds** a feature (implement → test → review → fix). `workflow-retro` looks **back**
   at how that run (or any multi-agent run) performed.
 - `engineering-insights` captures durable per-module technical discoveries in
-  `<module>/insights/INSIGHTS.md`. `workflow-retro` is about the **run/process**, not the code; its
+  `<module>/INSIGHTS.md`. `workflow-retro` is about the **run/process**, not the code; its
   durable output is the `docs/retros/ledger.md` trend log.

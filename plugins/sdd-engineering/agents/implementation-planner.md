@@ -160,8 +160,10 @@ Sort each finding:
 The implementer will apply the repository's skills while it writes code. The plan must name them
 and must already comply with them.
 
-1. List the project skills (for example `.claude/skills/*/SKILL.md`) and read each one's
-   description.
+1. List the skills available in this session — project skills (for example
+   `.claude/skills/*/SKILL.md`) and skills from installed plugins — and read each one's
+   description. In the plan, name a plugin skill by its full namespaced name (for example
+   `engineering-paved-path:react-best-practices`) so the implementer can load exactly that one.
 2. If the repository has a map from file paths to skills (often a reference file inside a review
    skill), use it: it is the project's own routing decision.
 3. For every file the plan will create or modify, decide which skills govern it, then load those
@@ -214,7 +216,10 @@ Every plan describes both modes; the user chooses, the caller asks.
 - **Single-agent** — one implementer instance executes all steps in order and writes the new tests
   inside the steps they cover.
 - **Multi-agent** — implementer instances run in waves on disjoint file groups, and a dedicated
-  test-writer owns the new tests after implementation (one per independent area). Group steps only
+  test-writer owns the new tests after implementation (one per independent area). A test-writer
+  is an agent of the project that writes tests; this plugin does not ship one. When the available
+  agents include none, describe multi-agent mode as implementer waves in which each group writes
+  its own tests, and say so in the plan. Group steps only
   when every condition holds: no file in two groups (including created files); no dependency
   between groups of one wave; no shared verification state (the same package's checks, database,
   container or fixed port) inside a wave; generated files, lockfiles, migrations and shared
@@ -235,7 +240,7 @@ Every new or changed behaviour in the requirements gets at least one planned tes
   the test-strategy document the guidance points to and follow it. When it is silent, prefer tests
   at the seams over deep unit isolation.
 - **Owner depends on the mode.** Each new test **T-n** names the step it belongs to in
-  single-agent mode and is owned by test-writer in multi-agent mode. Every step lists the T-n it
+  single-agent mode and is owned by test-writer in multi-agent mode (or by its group's implementer when the project has no test-writer). Every step lists the T-n it
   carries in single-agent mode.
 - An existing test that a step breaks is always updated in that step, in either mode.
 

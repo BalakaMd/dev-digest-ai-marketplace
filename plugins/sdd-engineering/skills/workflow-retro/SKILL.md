@@ -2,7 +2,7 @@
 name: workflow-retro
 description: >
   Post-mortem / retrospective for a multi-agent run. Run it AFTER a workflow finishes
-  (/run-plan, the spec → plan → implement chain, a Workflow() fan-out, or any batch of
+  (/sdd-engineering:run-plan, the spec → plan → implement chain, a Workflow() fan-out, or any batch of
   sub-agents) to collect how the run actually went and turn it into actionable change.
   Gathers cost & resource metrics (tokens, cache efficiency, tool calls, durations,
   agent count, launch order, parallelism), reconstructs qualitative insights (what was
@@ -10,9 +10,10 @@ description: >
   concrete recommendations (improve an agent's brief, pre-fetch a shared file once, merge
   or split agents, change concurrency). Outputs a full report to chat and appends one
   trend row to docs/retros/ledger.md.
-  TRIGGER only when explicitly asked: "/workflow-retro", "retro this run", "workflow
+  TRIGGER only when explicitly asked: "/sdd-engineering:workflow-retro", "retro this run", "workflow
   retrospective", "analyze that multi-agent run", "how did that workflow go".
   Does NOT cover: running the workflow itself, editing product code, pushing/merging.
+disable-model-invocation: true
 ---
 
 # Workflow Retro — retrospective for a multi-agent run
@@ -78,7 +79,7 @@ analysing — do not silently pick.
    - Main session transcript: `~/.claude/projects/<project-slug>/<session-id>.jsonl`
    - Run the bundled helper (read-only, stdlib-only):
      ```
-     python3 .claude/skills/workflow-retro/scripts/analyze_journals.py \
+     python3 "${CLAUDE_SKILL_DIR}/scripts/analyze_journals.py" \
        "~/.claude/projects/<project-slug>/<session-id>/subagents/agent-*.jsonl" --json
      ```
    - It prints per-agent and total tokens, **cache hit ratio**, tool calls, wall-clock span, and a
@@ -147,7 +148,7 @@ Each recommendation names a target, a change, and the expected payoff. Examples 
 
 - *Brief:* "`implementer` for T-3 needed 2 clarifying round-trips on owned paths — add the sibling
   tasks' owned-paths to its dispatch brief." → fewer round-trips, less token churn.
-- *Duplication:* "3 agents each read `server/docs/architecture.md` (~4k tokens ×3) — have the
+- *Duplication:* "3 agents each read `docs/architecture.md` (~4k tokens ×3) — have the
   orchestrator read it once and pass the relevant excerpt." → ~8k tokens saved per run.
 - *Concurrency:* "review agents ran serially but have disjoint inputs — dispatch them in one
   message." → wall-clock down from Σ to max.

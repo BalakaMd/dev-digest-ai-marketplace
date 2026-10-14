@@ -82,9 +82,10 @@ Otherwise continue.
 4. Read the current code of the affected flow — routes, contracts, UI screens and components —
    enough to know what the user sees and what the system does today. Cite `path:line` in the
    design review (never in the spec).
-5. Discover the project skills and load only those that carry **requirement-level** rules:
-   UX and accessibility, security and untrusted input. Implementation skills are the
-   implementation-planner's.
+5. Discover the skills available in this session (project skills and skills from installed
+   plugins, for example `engineering-paved-path:security`) and load only those that carry
+   **requirement-level** rules: UX and accessibility, security and untrusted input.
+   Implementation skills are the implementation-planner's.
 
 ## Step 2 — analyse the designs (or the description)
 

@@ -1,6 +1,6 @@
 ---
 name: engineering-insights
-description: Read and maintain the engineering insight log (INSIGHTS.md) for the module being worked on in this repo. Use this at the START of any non-trivial task — before changing code — to see what earlier sessions already learned about that module, and again at the END to record anything genuinely new. Trigger it whenever work touches server/, client/, reviewer-core/ or e2e/; whenever the user reports a bug, starts a feature, or debugs something confusing; whenever you hit a surprise, a dead end, a non-obvious root cause, or a tooling quirk; and whenever the user mentions insights, lessons learned, gotchas, pitfalls, or "what did we learn". Do not skip it because the task looks small — the log only pays off if it is read before the work and updated after it.
+description: Read and maintain the engineering insight log (INSIGHTS.md) for the module being worked on in this repository. Use this at the START of any non-trivial task — before changing code — to see what earlier sessions already learned about that module, and again at the END to record anything genuinely new. Trigger it whenever the repository keeps INSIGHTS.md files and work touches one of their modules; whenever the user reports a bug, starts a feature, or debugs something confusing; whenever you hit a surprise, a dead end, a non-obvious root cause, or a tooling quirk; and whenever the user mentions insights, lessons learned, gotchas, pitfalls, or "what did we learn". Do not skip it because the task looks small — the log only pays off if it is read before the work and updated after it.
 ---
 
 # Engineering Insights
@@ -16,14 +16,18 @@ wastes their attention. Everything below exists to keep that balance.
 
 ## Where the logs live
 
+A **module** is a top-level package or folder that owns its own `INSIGHTS.md` — find them with
+`git ls-files '**/INSIGHTS.md' INSIGHTS.md`. Repository guidance (`CLAUDE.md`, `AGENTS.md`,
+`README.md`) says which folders are modules; do not assume a layout.
+
 | Work touches | Log |
 |---|---|
-| `server/**` | `server/INSIGHTS.md` |
-| `client/**` | `client/INSIGHTS.md` |
-| `reviewer-core/**` | `reviewer-core/INSIGHTS.md` |
-| `e2e/**` | `e2e/INSIGHTS.md` |
-| `mcp/**` | `mcp/INSIGHTS.md` |
-| several modules at once, or `scripts/`, Docker, CI, repo layout | `INSIGHTS.md` (root) |
+| files under a module that has an `INSIGHTS.md` | that module's `INSIGHTS.md` |
+| a module without an `INSIGHTS.md` | the root `INSIGHTS.md`; create a module log only when its first entry qualifies and the repository's guidance allows new logs |
+| several modules at once, or scripts, CI, containers, repo layout | the root `INSIGHTS.md` |
+
+If the repository keeps no `INSIGHTS.md` at all, read nothing; at the end, propose creating the
+root log only if an entry qualifies, and ask before creating it.
 
 When work spans modules, route by **substance, not by file count**: the log that
 gets the entry is the one where the finding actually applies. A change that
@@ -77,7 +81,7 @@ arguing for a "yes", it is a no.
 4. **Not derivable** — reading the code, types, or tests would not have revealed
    it. If it is plainly visible in the source, the source is already saying it.
 5. **Not already known** — it is absent from this module's `INSIGHTS.md` *and*
-   from the applicable `AGENTS.md`.
+   from the applicable guidance files (`AGENTS.md`, `CLAUDE.md`).
 
 ## Categories
 
@@ -127,13 +131,13 @@ the only part that gets read. "Migrations do not run on boot" earns its line;
   The log records what was *learned*, not what was done.
 - **Restating the code.** If a reader would learn it by opening the file, the
   file already documents it better than a summary will.
-- **Anything already in `AGENTS.md`.** That file loads in every session and is
+- **Anything already in the guidance files** (`AGENTS.md`, `CLAUDE.md`). They load in every session and are
   kept under a hard line budget; duplicating it here wastes the budget twice.
 - **Blame.** "I used the wrong port" helps nobody. Reframe toward what made the
-  mistake easy — "the README still says 5432, the compose file says 5433" —
+  mistake easy — "the README still documents the old port, the compose file uses the new one" —
   because the second version is fixable and the first is not.
 
-## Promoting to AGENTS.md
+## Promoting to the guidance file
 
 An insight that turns out to matter in *every* session in a module has outgrown
 the log. Move it into that module's `AGENTS.md`, but only if it survives the

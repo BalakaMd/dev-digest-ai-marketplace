@@ -66,6 +66,7 @@ For each plan step, in dependency order:
 
 **Tests.** Write the new tests your steps list. Tests the plan's test plan marks
 `owner: test-writer` are not yours: a separate agent writes them after you, so do not write them.
+If the plan assigns tests to such an agent but none exists in this session, say so in the report instead of skipping the tests silently.
 When the plan describes execution modes, the caller names the chosen one: in single-agent mode the
 `T-n` tests your steps carry are yours; in multi-agent mode every `T-n` belongs to test-writer.
 An existing test your change breaks is always yours to update — never by weakening it.
@@ -79,8 +80,11 @@ with the reason and the options you see.
 ## Step 2 — self-verification (implementation scope only)
 
 1. Run the type check and the test suites of **every package you touched**, using the commands
-   the project guidance gives. A suite that needs infrastructure you do not have (a container
-   runtime, credentials) is reported as not run, with the reason — never as passed.
+   the project guidance gives. If the guidance names none, look in the package manifests
+   (`scripts`), the Makefile and the CI workflows; if you still find no test or type-check command,
+   do not invent one — report `not run: no command found` and list where you looked. A suite that
+   needs infrastructure you do not have (a container runtime, credentials) is reported as not run,
+   with the reason — never as passed.
 2. Compare the working tree with the plan: list changed and untracked files and match them
    against the plan's file list. Every extra file is either justified as a deviation or reverted
    by editing it back. Remove debug output and temporary code.
