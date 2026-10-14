@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "dev-digest-ai-marketplace",
+  "description": "Reusable, project-agnostic AI engineering plugins: shared skills, a read-only researcher, an architecture reviewer and a spec-driven development workflow.",
+  "owner": {
+    "name": "AI Engineering"
+  },
+  "plugins": [
+    {
+      "name": "engineering-paved-path",
+      "source": "./plugins/engineering-paved-path"
+    },
+    {
+      "name": "research-tools",
+      "source": "./plugins/research-tools"
+    },
+    {
+      "name": "architecture-review",
+      "source": "./plugins/architecture-review"
+    },
+    {
+      "name": "sdd-engineering",
+      "source": "./plugins/sdd-engineering"
+    }
+  ]
+}
