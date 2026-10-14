@@ -1,0 +1,13 @@
+# Default owner for everything
+*                           @BalakaMd
+
+# Per-plugin owners (replace with team handles when a team exists)
+/plugins/engineering-paved-path/   @BalakaMd
+/plugins/research-tools/           @BalakaMd
+/plugins/architecture-review/      @BalakaMd
+/plugins/sdd-engineering/          @BalakaMd
+
+# Release process and security rules need extra care
+/docs/SECURITY.md                  @BalakaMd
+/docs/RELEASES.md                  @BalakaMd
+/.github/                          @BalakaMd
