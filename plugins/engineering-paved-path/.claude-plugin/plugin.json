@@ -1,0 +1,7 @@
+{
+  "name": "engineering-paved-path",
+  "version": "1.0.0",
+  "description": "Shared engineering skills (frameworks, testing, architecture, security, diagrams) used by the other plugins in this marketplace.",
+  "author": { "name": "AI Engineering" },
+  "keywords": ["skills", "react", "nextjs", "fastify", "drizzle", "zod", "typescript", "security", "testing"]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "architecture-review",
+  "version": "1.0.0",
+  "description": "Read-only architecture reviewer that checks changes against the architecture rules documented in the repository itself.",
+  "author": { "name": "AI Engineering" },
+  "keywords": ["agent", "architecture", "review", "read-only"],
+  "dependencies": [
+    { "name": "engineering-paved-path", "version": "^1.0.0" }
+  ]
+}
