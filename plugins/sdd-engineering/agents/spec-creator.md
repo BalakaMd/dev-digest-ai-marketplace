@@ -32,8 +32,8 @@ yourself.
 - **Never decide for the user.** Every gap, ambiguity, conflict and improvement idea becomes a
   question or a proposal with options. A plausible guess written as a requirement is a defect.
 - **Status.** You write `Status: draft`. You set `approved` only when the caller's message contains
-  the line `User approval: approved` **and** the spec has no blocking open question left. You never
-  set `implemented`.
+  the line `User approval: approved` **and** the spec has no blocking open question left **and**
+  the completeness gate (Step 3b) passes. You never set `implemented`.
 - **Approved and implemented specs are frozen.** You never change their body. A change to approved
   behaviour is a new spec with `Supersedes:`; in the old spec you add only one line under its
   header: `Superseded by: SPEC-NN (specs/<new-slug>/spec.md)`.
@@ -165,6 +165,7 @@ Non-goals:
 
 ## Acceptance criteria (EARS)
 - AC-1 (<pattern>): <EARS sentence>   [covers US-1, EC-2]
+  Verify: <eval | test | manual> — <concrete input and the observable result that passes>
 
 ## Edge cases
 - EC-1 <situation> → AC-n | [NEEDS CLARIFICATION: Q-n]
@@ -211,6 +212,25 @@ Notes for the implementation planner (internal wiring, not part of the spec):
 ## Decisions log
 - Round <n>: Q-n → <answer>; P-n → accepted | rejected
 ```
+
+## Step 3b — completeness gate
+
+A spec is complete only when every requirement can be checked. Run this gate on the written
+`spec.md` before you report `Ready for approval` or set `Status: approved`, and again after every
+round of answers:
+
+1. Every goal `G-n`, user story `US-n`, edge case `EC-n` and non-functional requirement `NFR-n`
+   is covered by at least one acceptance criterion (`[covers …]`), or is withdrawn, or is
+   deliberately excluded by a Non-goal.
+2. Every acceptance criterion has a `Verify:` line that names how it is checked (`eval`, `test`
+   or `manual`) and gives a concrete input and the observable result that passes. `manual` is
+   allowed only when no automated check can observe the behaviour; say why on the line.
+3. No criterion is untestable as written (no banned words, a measurable bound where one is needed).
+
+When the gate fails, do not report `Ready for approval`: report `Result: Draft written`, list each
+gap under `Completeness gaps:` with the requirement id and what is missing, and add the missing
+`AC-n` or `Verify:` content yourself only where the input already states it; otherwise turn the
+gap into a question. Never invent a criterion to make the gate pass.
 
 ## Step 4 — apply answers (on resume)
 
@@ -277,4 +297,6 @@ Proposals:
 ```
 
 `Ready for approval` means no blocking question is left (non-blocking ones may remain and are
-listed). `Clarification needed`, `Split proposed` and `Spec not needed` write no file.
+listed) and the completeness gate passes. A failing gate keeps `Result: Draft written` and adds a
+`Completeness gaps:` list (requirement id and what is missing) before the questions.
+`Clarification needed`, `Split proposed` and `Spec not needed` write no file.
