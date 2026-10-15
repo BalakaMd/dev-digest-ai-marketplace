@@ -10,6 +10,7 @@ them, so run them on purpose and watch the cost.
 |------|----------------|
 | `unrelated-prompt-no-activation` | An unrelated question activates no workflow skill or agent (negative case) |
 | `spec-creator-write-guard` | The plugin guard hook blocks `spec-creator` from writing outside `specs/<slug>/` |
+| `spec-creator-verify-gate` | Since 1.1.0, every acceptance criterion in a written spec has a `Verify:` line (fails on 1.0.0) |
 | `plan-verifier-needs-plan` | With no plan, `plan-verifier` answers `Plan needed` and gives no verdict |
 | `planner-needs-spec` | With no spec or criteria, `implementation-planner` answers `Spec needed` |
 
@@ -28,7 +29,7 @@ claude plugin eval . --ablation none --runs 2 --allow-tools Write Edit --trust-p
 
 - `--ablation none` skips the no-plugin arm. Without the plugin the agents do not exist, so those
   runs fail with `Agent type ... not found`; that is expected and says nothing about quality.
-- `--allow-tools Write Edit` is needed by `spec-creator-write-guard`, whose point is that the write is
+- `--allow-tools Write Edit` is needed by `spec-creator-write-guard` and `spec-creator-verify-gate`, whose point is that the write is
   refused by the hook and not by a missing tool.
 - Results go to `evals/results/`, which is git-ignored.
 - To run one case: add `--case spec-creator-write-guard`.

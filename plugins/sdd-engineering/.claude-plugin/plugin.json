@@ -1,6 +1,6 @@
 {
   "name": "sdd-engineering",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Spec-driven development workflow: spec, plan, implement, verify, and retrospective.",
   "author": { "name": "AI Engineering" },
   "keywords": ["workflow", "spec-driven", "agents", "planning", "verification"],
