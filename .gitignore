@@ -11,3 +11,6 @@ site/dist/
 # Local design reference (not published)
 inbox/
 inpox/
+
+# Eval run output
+evals/results/
