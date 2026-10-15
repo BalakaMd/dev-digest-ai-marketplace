@@ -27,9 +27,25 @@ Dependencies are installed automatically. Requires Claude Code `>=2.1.110`.
 .claude-plugin/marketplace.json   catalog of plugins (source of truth for the catalog)
 plugins/<name>/                   one directory per plugin, each with .claude-plugin/plugin.json
 docs/                             guidelines, security, releases, site spec, cost baseline
-scripts/build-index.mjs           builds the search index consumed by the catalog site
+scripts/build-index.mjs           builds the catalog data (index, releases, stats, bodies) for the site
+scripts/check-english.mjs         fails when a tracked file contains Cyrillic text
 site/                             static catalog (React + Vite) published to GitHub Pages
 ```
+
+## Catalog site
+
+The catalog is a static site (React + TypeScript + Vite, client-side search) built from the real
+plugin files. Spec: [docs/SITE-SPEC.md](docs/SITE-SPEC.md).
+
+```sh
+npm ci && npm --prefix site ci
+npm run site:dev      # build the index, then start the dev server on http://localhost:5173
+npm run site:build    # production build into site/dist
+npm test              # tests of the index builder
+```
+
+Pull requests run `.github/workflows/validate.yml` (plugin checks and, as a separate job, the site
+build). A merge to `main` runs `.github/workflows/pages.yml`, which publishes the site.
 
 ## Contributing
 

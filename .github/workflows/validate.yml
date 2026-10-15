@@ -1,0 +1,77 @@
+name: Validate
+
+# Runs on every pull request. Two separate jobs, so the status of the catalog site build is
+# visible apart from the plugin checks.
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plugins:
+    name: Plugins (validate, tests, English only)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - name: English only
+        run: npm run check:english
+      - name: Index builder tests
+        run: npm test
+      - name: Install Claude Code
+        run: npm install --global @anthropic-ai/claude-code
+      - name: Validate the marketplace and every plugin
+        run: |
+          claude plugin validate .
+          for dir in plugins/*/; do
+            claude plugin validate "$dir"
+          done
+      - name: Guard hook scripts are executable and pass a syntax check
+        run: |
+          for script in plugins/*/hooks/*.sh; do
+            test -x "$script" || { echo "$script is not executable"; exit 1; }
+            bash -n "$script"
+          done
+
+  site-build:
+    name: Site build (catalog index + Vite)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # the index reads git history for "last updated" dates
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            site/package-lock.json
+      - run: npm ci
+      - run: npm --prefix site ci
+      - name: Build the catalog index
+        run: npm run build:index
+      - name: Type-check and test the site
+        run: |
+          npm --prefix site run typecheck
+          npm --prefix site test
+      - name: Build the site
+        run: npm --prefix site run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-preview
+          path: site/dist
+          retention-days: 7
