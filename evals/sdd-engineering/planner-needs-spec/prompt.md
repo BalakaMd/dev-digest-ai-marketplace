@@ -2,6 +2,7 @@
 name: planner-needs-spec
 description: For a feature with no spec and no testable criteria, the planner must return "Spec needed".
 tags: [agents, contract]
+plugins: ["../../../plugins/sdd-engineering", "../../../plugins/engineering-paved-path", "../../../plugins/research-tools", "../../../plugins/architecture-review"]
 max_turns: 8
 allowed_tools: [Read, Glob, Grep, Agent]
 ---

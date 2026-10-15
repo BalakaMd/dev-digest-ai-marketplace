@@ -13,4 +13,4 @@ inbox/
 inpox/
 
 # Eval run output
-plugins/*/evals/results/
+evals/results/

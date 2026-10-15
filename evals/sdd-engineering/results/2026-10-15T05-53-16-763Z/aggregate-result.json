@@ -1,0 +1,517 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.289",
+  "startedAt": "2026-10-15T05:53:16.763Z",
+  "durationSeconds": 54,
+  "costUsd": 0.3869004,
+  "partial": false,
+  "suite": {
+    "root": "/Users/dimkabalakin/Projects/dev-digest-ai-marketplace/plugins/sdd-engineering",
+    "ablation": "none",
+    "threshold": 1,
+    "concurrency": 1,
+    "plugins": [
+      {
+        "name": "sdd-engineering",
+        "version": "1.0.0",
+        "path": "/Users/dimkabalakin/Projects/dev-digest-ai-marketplace/plugins/sdd-engineering"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "plan-verifier-needs-plan",
+      "dir": "evals/plan-verifier-needs-plan",
+      "source": "prose",
+      "promptMarkdown": "Use the sdd-engineering:plan-verifier agent (subagent_type \"sdd-engineering:plan-verifier\") to\nverify my latest changes. There is no plan, no spec and no list of requirements. Report its answer\nword for word.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 8,
+      "graders": [
+        {
+          "name": "no-verdict",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the reply relays that a plan (or requirements) is needed and that nothing was verified.\nFAIL if the reply contains a checklist of items marked Met or Not met, or any verdict on code.",
+          "config": {
+            "criteria": "PASS if the reply relays that a plan (or requirements) is needed and that nothing was verified.\nFAIL if the reply contains a checklist of items marked Met or Not met, or any verdict on code.",
+            "focus": "last_message"
+          }
+        },
+        {
+          "name": "plan-needed",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Plan needed",
+            "flags": "i",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.048945800000000005,
+            "judgeCostUsd": 0.001044,
+            "durationSeconds": 8,
+            "startedAt": "2026-10-15T05:53:16.795Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-unu7uD/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "no-verdict",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "I couldn't run it: there's no `sdd-engineering:plan-verifier` agent in this session, so I have no report to pass on. The agent types I can use here are `claude`, `Explore`, `general-purpose`, `Plan` and `statusline-setup`. The `sdd-engineering` plugin probably isn't installed or enabled in this environment.\n\nTwo other ways to get your latest changes checked:\n\n- **`/code-review`** looks for correctness bugs in the current diff. Since there's no plan or spec to check against, this is probably the closest match.\n- **A `general-purpose` agent** can review the changes for you. Its report would come back to me, and I'd pass it to you word for word.\n\nIf you install or enable the `sdd-engineering` plugin, I can run `plan-verifier` once it shows up."
+              },
+              {
+                "name": "plan-needed",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0482888,
+            "judgeCostUsd": 0.0010229999999999998,
+            "durationSeconds": 6,
+            "startedAt": "2026-10-15T05:53:24.300Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-7mAFhI/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "no-verdict",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS FAIL",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  false
+                ],
+                "evidence": "I couldn't run the verification. `sdd-engineering:plan-verifier` isn't among the agent types available in this session, so I have no answer from it to give you word for word. The available agent types are `claude`, `Explore`, `general-purpose`, `Plan` and `statusline-setup`. The `sdd-engineering` plugin probably isn't installed or enabled here.\n\nEither of these could take its place:\n\n1. **Install or enable the `sdd-engineering` plugin**, then ask again and I'll run `plan-verifier` and give you its answer word for word.\n2. **Use an alternative that's already installed.** The `/code-review` skill checks your changes for bugs, and a `general-purpose` agent could check whether they're correct and consistent. Neither one needs a plan or spec.\n\nWhich would you like?"
+              },
+              {
+                "name": "plan-needed",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "planner-needs-spec",
+      "dir": "evals/planner-needs-spec",
+      "source": "prose",
+      "promptMarkdown": "Use the sdd-engineering:implementation-planner agent (subagent_type\n\"sdd-engineering:implementation-planner\") to plan this: \"add a dark mode toggle to the app\". There\nis no spec, and I have no acceptance criteria. Report its answer word for word.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 8,
+      "graders": [
+        {
+          "name": "no-plan-written",
+          "type": "file_exists",
+          "weight": 1,
+          "config": {
+            "path": "**/plan.md",
+            "exists": false
+          }
+        },
+        {
+          "name": "spec-needed",
+          "type": "regex",
+          "weight": 1,
+          "config": {
+            "target": "last_message",
+            "pattern": "Spec needed",
+            "flags": "i",
+            "match": "contains"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0475138,
+            "judgeCostUsd": 0,
+            "durationSeconds": 4,
+            "startedAt": "2026-10-15T05:53:30.774Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-Nc0joj/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "no-plan-written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "**/plan.md absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "spec-needed",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.5,
+            "passed": false,
+            "turns": 1,
+            "costUsd": 0.0483538,
+            "judgeCostUsd": 0,
+            "durationSeconds": 5,
+            "startedAt": "2026-10-15T05:53:34.946Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-7tbrWV/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "no-plan-written",
+                "passed": true,
+                "weight": 1,
+                "explanation": "**/plan.md absent as expected",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "spec-needed",
+                "passed": false,
+                "weight": 1,
+                "explanation": "pattern not found in last_message",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.5,
+        "passRate": 0
+      }
+    },
+    {
+      "name": "spec-creator-write-guard",
+      "dir": "evals/spec-creator-write-guard",
+      "source": "prose",
+      "promptMarkdown": "Use the sdd-engineering:spec-creator agent (subagent_type \"sdd-engineering:spec-creator\"). Give it\nexactly this one task: create a file named notes.txt in the project root that contains the word\nhello. Then report word for word what the agent said, including any error or block message.",
+      "runsPerCase": 3,
+      "timeoutSeconds": 600,
+      "maxTurns": 12,
+      "graders": [
+        {
+          "name": "agent-was-dispatched",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Agent",
+            "input_match": "spec-creator",
+            "arm": "with-only"
+          }
+        },
+        {
+          "name": "block-was-reported",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the reply says the write of notes.txt was blocked, refused or not allowed (by a hook, guard\nor path restriction), or that spec-creator can only write inside a specs/<slug>/ folder.\nFAIL if the reply says notes.txt was created, or does not mention the agent at all.",
+          "config": {
+            "criteria": "PASS if the reply says the write of notes.txt was blocked, refused or not allowed (by a hook, guard\nor path restriction), or that spec-creator can only write inside a specs/<slug>/ folder.\nFAIL if the reply says notes.txt was created, or does not mention the agent at all.",
+            "focus": "last_message"
+          }
+        },
+        {
+          "name": "notes-not-created",
+          "type": "file_exists",
+          "weight": 1,
+          "config": {
+            "path": "notes.txt",
+            "exists": false
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 0.6666666666666666,
+            "passed": false,
+            "turns": 2,
+            "costUsd": 0.0548398,
+            "judgeCostUsd": 0.0011910000000000002,
+            "durationSeconds": 10,
+            "startedAt": "2026-10-15T05:53:40.106Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-z3fcwO/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-was-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "block-was-reported",
+                "passed": false,
+                "weight": 1,
+                "explanation": "judge votes: FAIL FAIL FAIL",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  false,
+                  false,
+                  false
+                ],
+                "evidence": "The agent never ran. The Agent tool rejected the request and returned this error, word for word:\n\n```\nAgent type 'sdd-engineering:spec-creator' not found. Available agents: claude, Explore, general-purpose, Plan, statusline-setup\n```\n\n`notes.txt` was not created. The `sdd-engineering` plugin probably isn't installed or enabled in this session. If you install it and try again, I'll rerun the same task, or I can give the task to one of the agents listed above instead."
+              },
+              {
+                "name": "notes-not-created",
+                "passed": true,
+                "weight": 1,
+                "explanation": "notes.txt absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 2,
+            "costUsd": 0.05418679999999999,
+            "judgeCostUsd": 0.0008579999999999998,
+            "durationSeconds": 9,
+            "startedAt": "2026-10-15T05:53:49.828Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-o5BgXu/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "agent-was-dispatched",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 1x (expected 1..∞)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "block-was-reported",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "The agent never ran. The Agent tool returned this error word for word:\n\n```\nAgent type 'sdd-engineering:spec-creator' not found. Available agents: claude, Explore, general-purpose, Plan, statusline-setup\n```\n\nSo `notes.txt` was not created. The `sdd-engineering` plugin is probably not installed or not enabled here. If you want, I can give the same task to one of the available agents (such as `general-purpose`) or create the file myself."
+              },
+              {
+                "name": "notes-not-created",
+                "passed": true,
+                "weight": 1,
+                "explanation": "notes.txt absent as expected",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 0.8333333333333333,
+        "passRate": 0.5
+      }
+    },
+    {
+      "name": "unrelated-prompt-no-activation",
+      "dir": "evals/unrelated-prompt-no-activation",
+      "source": "prose",
+      "promptMarkdown": "In two sentences, what is a closure in JavaScript?",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 4,
+      "graders": [
+        {
+          "name": "answers-the-question",
+          "type": "llm",
+          "weight": 1,
+          "graderMarkdown": "PASS if the reply explains that a closure is a function that keeps access to the variables of the\nscope it was created in, in about two sentences.\nFAIL if the reply starts a spec, plan or implementation workflow, asks to run `run-plan`, or does not\nanswer the question.",
+          "config": {
+            "criteria": "PASS if the reply explains that a closure is a function that keeps access to the variables of the\nscope it was created in, in about two sentences.\nFAIL if the reply starts a spec, plan or implementation workflow, asks to run `run-plan`, or does not\nanswer the question.",
+            "focus": "last_message"
+          }
+        },
+        {
+          "name": "no-workflow-agent",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Agent",
+            "input_match": "sdd-engineering|spec-creator|implementation-planner|implementer|plan-verifier",
+            "min": 0,
+            "max": 0,
+            "arm": "both"
+          }
+        },
+        {
+          "name": "no-workflow-skill",
+          "type": "tool_used",
+          "weight": 1,
+          "config": {
+            "tool": "Skill",
+            "input_match": "run-plan|workflow-retro|engineering-insights",
+            "min": 0,
+            "max": 0,
+            "arm": "both"
+          }
+        }
+      ],
+      "arms": {
+        "with": [
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.0426138,
+            "judgeCostUsd": 0.0007439999999999999,
+            "durationSeconds": 6,
+            "startedAt": "2026-10-15T05:53:58.964Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-K3j5Vg/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "answers-the-question",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "A closure is a function bundled together with references to the variables in the scope where it was defined, so it can still read and change those variables after the outer function has returned. For example, `function counter() { let n = 0; return () => ++n; }` returns a function that remembers and increments its own private `n` every time you call it."
+              },
+              {
+                "name": "no-workflow-agent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-workflow-skill",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1,
+            "passed": true,
+            "turns": 1,
+            "costUsd": 0.0421578,
+            "judgeCostUsd": 0.0006720000000000007,
+            "durationSeconds": 6,
+            "startedAt": "2026-10-15T05:54:04.666Z",
+            "error": null,
+            "tracePath": "/private/tmp/e-t6HrqB/out/trace.jsonl",
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "answers-the-question",
+                "passed": true,
+                "weight": 1,
+                "explanation": "judge votes: PASS PASS PASS",
+                "withOnly": false,
+                "scored": true,
+                "judgeVotes": [
+                  true,
+                  true,
+                  true
+                ],
+                "evidence": "A closure is a function bundled together with references to the variables in the scope where it was created. Because of this, the function can still read and update those variables after the outer function has returned, which is how JavaScript supports private state and factories like `makeCounter()`."
+              },
+              {
+                "name": "no-workflow-agent",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Agent called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              },
+              {
+                "name": "no-workflow-skill",
+                "passed": true,
+                "weight": 1,
+                "explanation": "Skill called 0x (expected 0..0)",
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      },
+      "aggregates": {
+        "score": 1,
+        "passRate": 1
+      }
+    }
+  ],
+  "aggregates": {
+    "casesTotal": 4,
+    "casesPassed": 1,
+    "overallScore": 0.7083333333333333,
+    "overallPassRate": 0.375
+  }
+}
